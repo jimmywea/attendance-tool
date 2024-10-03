@@ -46,6 +46,24 @@
             text-align: center;
             color: #28a745;
         }
+        #attendanceList {
+            margin-top: 20px;
+        }
+        #attendanceList h3 {
+            text-align: center;
+            color: #333;
+        }
+        #attendanceList ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #attendanceList ul li {
+            background-color: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -55,9 +73,18 @@
     <input type="text" id="studentName" placeholder="Nhập tên học sinh" required>
     <button onclick="submitAttendance()">Lưu điểm danh</button>
     <div class="message" id="message"></div>
+
+    <!-- Phần hiển thị danh sách học sinh đã điểm danh -->
+    <div id="attendanceList">
+        <h3>Danh sách học sinh đã điểm danh</h3>
+        <ul id="studentList"></ul>
+    </div>
 </div>
 
 <script>
+    // Biến để lưu danh sách học sinh đã điểm danh
+    let studentAttendanceList = [];
+
     function submitAttendance() {
         const studentName = document.getElementById("studentName").value;
 
@@ -78,10 +105,26 @@
         .then(data => {
             document.getElementById("message").innerHTML = data;
             document.getElementById("studentName").value = ""; // Xóa ô nhập liệu sau khi lưu thành công
+
+            // Cập nhật danh sách học sinh đã điểm danh
+            studentAttendanceList.push(studentName);
+            updateAttendanceList();
         })
         .catch(error => {
             document.getElementById("message").innerHTML = "Có lỗi xảy ra!";
             console.error("Error:", error);
+        });
+    }
+
+    // Hàm để cập nhật danh sách học sinh đã điểm danh
+    function updateAttendanceList() {
+        const listElement = document.getElementById("studentList");
+        listElement.innerHTML = ""; // Xóa danh sách cũ
+
+        studentAttendanceList.forEach((student, index) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${index + 1}. ${student}`;
+            listElement.appendChild(listItem);
         });
     }
 </script>
