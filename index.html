@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điểm Danh Học Sinh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 10px;
+            text-align: center;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Điểm Danh Học Sinh</h2>
+    <input type="text" id="studentName" placeholder="Nhập tên học sinh" required>
+    <button onclick="submitAttendance()">Lưu điểm danh</button>
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    function submitAttendance() {
+        const studentName = document.getElementById("studentName").value;
+
+        if (studentName === "") {
+            document.getElementById("message").innerHTML = "Vui lòng nhập tên học sinh!";
+            return;
+        }
+
+        // Gửi dữ liệu qua yêu cầu POST tới Google Apps Script
+        fetch("https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `studentName=${encodeURIComponent(studentName)}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("message").innerHTML = data;
+            document.getElementById("studentName").value = ""; // Xóa ô nhập liệu sau khi lưu thành công
+        })
+        .catch(error => {
+            document.getElementById("message").innerHTML = "Có lỗi xảy ra!";
+            console.error("Error:", error);
+        });
+    }
+</script>
+
+</body>
+</html>
