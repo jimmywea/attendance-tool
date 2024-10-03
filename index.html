@@ -100,7 +100,8 @@
             return;
         }
 
-        fetch("https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec", {
+        // Gửi yêu cầu POST tới Google Apps Script để lưu điểm danh
+        fetch("https://script.google.com/macros/s/AKfycbzVUTqIpUo_u9Bheq62Hlod2IEpoad7wKKZS-vB5rxhTUvqb9b5FUKQ05S6Hjc45QNPSA/exec", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -112,6 +113,7 @@
             document.getElementById("message").innerHTML = data;
             document.getElementById("studentName").value = "";
 
+            // Cập nhật danh sách học sinh đã điểm danh
             studentAttendanceList.push(studentName);
             updateAttendanceList();
         })
@@ -142,7 +144,8 @@
             return;
         }
 
-        fetch(`https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec?studentName=${encodeURIComponent(studentName)}&startDate=${startDate}&endDate=${endDate}`, {
+        // Gửi yêu cầu GET để rà soát số buổi học của học sinh
+        fetch(`https://script.google.com/macros/s/AKfycbzVUTqIpUo_u9Bheq62Hlod2IEpoad7wKKZS-vB5rxhTUvqb9b5FUKQ05S6Hjc45QNPSA/exec?studentName=${encodeURIComponent(studentName)}&startDate=${startDate}&endDate=${endDate}`, {
             method: "GET"
         })
         .then(response => response.text())
