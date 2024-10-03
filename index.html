@@ -22,7 +22,7 @@
             text-align: center;
             color: #333;
         }
-        input[type="text"] {
+        input[type="text"], input[type="date"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -79,10 +79,17 @@
         <h3>Danh sách học sinh đã điểm danh</h3>
         <ul id="studentList"></ul>
     </div>
+
+    <!-- Phần rà soát học sinh -->
+    <h2>Rà Soát Số Buổi Học</h2>
+    <input type="text" id="searchStudentName" placeholder="Nhập tên học sinh">
+    <input type="date" id="startDate" placeholder="Ngày bắt đầu">
+    <input type="date" id="endDate" placeholder="Ngày kết thúc">
+    <button onclick="searchAttendance()">Tìm kiếm</button>
+    <div class="message" id="searchMessage"></div>
 </div>
 
 <script>
-    // Biến để lưu danh sách học sinh đã điểm danh
     let studentAttendanceList = [];
 
     function submitAttendance() {
@@ -93,7 +100,6 @@
             return;
         }
 
-        // Gửi dữ liệu qua yêu cầu POST tới Google Apps Script
         fetch("https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec", {
             method: "POST",
             headers: {
@@ -104,9 +110,8 @@
         .then(response => response.text())
         .then(data => {
             document.getElementById("message").innerHTML = data;
-            document.getElementById("studentName").value = ""; // Xóa ô nhập liệu sau khi lưu thành công
+            document.getElementById("studentName").value = "";
 
-            // Cập nhật danh sách học sinh đã điểm danh
             studentAttendanceList.push(studentName);
             updateAttendanceList();
         })
@@ -116,15 +121,37 @@
         });
     }
 
-    // Hàm để cập nhật danh sách học sinh đã điểm danh
     function updateAttendanceList() {
         const listElement = document.getElementById("studentList");
-        listElement.innerHTML = ""; // Xóa danh sách cũ
+        listElement.innerHTML = "";
 
         studentAttendanceList.forEach((student, index) => {
             const listItem = document.createElement("li");
             listItem.textContent = `${index + 1}. ${student}`;
             listElement.appendChild(listItem);
+        });
+    }
+
+    function searchAttendance() {
+        const studentName = document.getElementById("searchStudentName").value;
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        if (studentName === "" || startDate === "" || endDate === "") {
+            document.getElementById("searchMessage").innerHTML = "Vui lòng nhập đầy đủ thông tin!";
+            return;
+        }
+
+        fetch(`https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec?studentName=${encodeURIComponent(studentName)}&startDate=${startDate}&endDate=${endDate}`, {
+            method: "GET"
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("searchMessage").innerHTML = data;
+        })
+        .catch(error => {
+            document.getElementById("searchMessage").innerHTML = "Có lỗi xảy ra!";
+            console.error("Error:", error);
         });
     }
 </script>
