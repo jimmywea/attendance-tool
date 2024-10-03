@@ -142,9 +142,9 @@
             return;
         }
 
-        fetch(`https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec?studentName=${encodeURIComponent(studentName)}&startDate=${startDate}&endDate=${endDate}`, {
-            method: "GET"
-        })
+        fetch(`https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbzJMsxTrUnJliJ8C216tkHEUXu7J0kcCJe8mLHu9Ir2O0WC3l_TInwB1q_VQu-7MtE1Qg/exec?studentName=${encodeURIComponent(studentName)}&startDate=${startDate}&endDate=${endDate}`, {
+    method: "GET"
+   })
         .then(response => response.text())
         .then(data => {
             document.getElementById("searchMessage").innerHTML = data;
